@@ -24,6 +24,7 @@ Every KCP instance can reach every Kafka broker, for every broker a KCP instance
 The load can be equally distributed between the KCP instances by using a load balancer in front of the KCP instances, shown in below image.
 ![](images/network.drawio.png)
 
+All 4 kcp instances can reach all three brokers. So even if the load balancer equally distributes the connections, which broker it will be used is part of the partitions of the topic.
 
 ## Performance
 Inserting KCP into the datastream without additional controls adds less than 1ms latency to the Kafka request-response cycle. 
