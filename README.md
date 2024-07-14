@@ -17,6 +17,8 @@ Some things you can do with:
 - Schema validation on complete messages.
 - Implement chaos testing, mimic unstable network conditions, e.g., delay, drop, or reorder messages and see how your application responds to that. 
 
+
+
 ## How Kafka Control Proxy Works?
 
 

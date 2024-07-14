@@ -3,26 +3,13 @@
   <component name="CompilerConfiguration">
     <excludeFromCompile>
       <directory url="file://$PROJECT_DIR$/kafka-control-proxy-examples/src/main/resources/archetype-resources" includeSubdirectories="true" />
-      <directory url="file://$PROJECT_DIR$/kafka-control-proxy-examples/clean/src/main/resources/archetype-resources" includeSubdirectories="true" />
+      <directory url="file://$PROJECT_DIR$/kafka-control-proxy-examples/plain/src/main/resources/archetype-resources" includeSubdirectories="true" />
       <directory url="file://$PROJECT_DIR$/kafka-control-proxy-performance/src-2/main/resources/archetype-resources" includeSubdirectories="true" />
       <directory url="file://$PROJECT_DIR$/kafka-control-proxy-performance/producer/src/main/resources/archetype-resources" includeSubdirectories="true" />
       <directory url="file://$PROJECT_DIR$/kafka-control-proxy-performance/consumer/src/main/resources/archetype-resources" includeSubdirectories="true" />
       <directory url="file://$PROJECT_DIR$/kafka-control-proxy-performance/metrics/src/main/resources/archetype-resources" includeSubdirectories="true" />
     </excludeFromCompile>
     <annotationProcessing>
-      <profile name="Maven default annotation processors profile" enabled="true">
-        <sourceOutputDir name="target/generated-sources/annotations" />
-        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
-        <outputRelativeToContentRoot value="true" />
-        <module name="firewall" />
-        <module name="playground" />
-        <module name="producer" />
-        <module name="metrics" />
-        <module name="clean" />
-        <module name="transform-add-header" />
-        <module name="ssl" />
-        <module name="consumer" />
-      </profile>
       <profile name="Annotation profile for kafka-control-proxy-parent" enabled="true">
         <sourceOutputDir name="src/main/generated" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
@@ -31,25 +18,20 @@
         <processor name="io.vertx.codegen.CodeGenProcessor" />
         <module name="kafka-control-proxy" />
       </profile>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="firewall" />
+        <module name="ssl" />
+        <module name="transform-add-header" />
+        <module name="plain" />
+      </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
-      <module name="clean (1)" target="17" />
-      <module name="clean (2)" target="17" />
-      <module name="code-with-quarkus" target="21" />
-      <module name="kafka-secure-proxy" target="17" />
-      <module name="kafka-secure-proxy (1)" target="17" />
-      <module name="kafka-secure-proxy (2)" target="1.5" />
-    </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
-      <module name="code-with-quarkus" options="-parameters" />
-      <module name="consumer" options="" />
       <module name="kafka-control-proxy" options="-AoutputDirectory=$PROJECT_DIR$/kafka-control-proxy/src/main" />
-      <module name="kafka-control-proxy-performance" options="" />
-      <module name="kafka-secure-proxy" options="-AoutputDirectory=$PROJECT_DIR$/kafka-control-proxy/src/main" />
-      <module name="kafka-secure-proxy (1)" options="-AoutputDirectory=$PROJECT_DIR$/src/main" />
-      <module name="producer" options="" />
     </option>
   </component>
 </project>

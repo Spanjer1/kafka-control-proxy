@@ -19,15 +19,12 @@ package nl.reinspanjer.kafkacontrolproxy.examples;
 import io.vertx.core.Vertx;
 import nl.reinspanjer.kafkacontrolproxy.KafkaControlProxy;
 import org.apache.kafka.common.protocol.ApiKeys;
-import org.slf4j.Logger;
 
 import java.util.List;
 
 import static nl.reinspanjer.kafkacontrolproxy.control.NodeRegistrator.registerNode;
 
 public class Main {
-
-    private Logger LOGGER = org.slf4j.LoggerFactory.getLogger(Main.class);
 
     public static void main(String[] args) {
         Vertx vertx = Vertx.vertx();

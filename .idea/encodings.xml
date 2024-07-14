@@ -1,34 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="Encoding">
-    <file url="file://$PROJECT_DIR$/kafka-control-proxy-examples/clean/src/main/java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/kafka-control-proxy-examples/clean/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/kafka-control-proxy-examples/firewall/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/kafka-control-proxy-examples/firewall/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/kafka-control-proxy-examples/plain/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/kafka-control-proxy-examples/plain/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/kafka-control-proxy-examples/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/kafka-control-proxy-examples/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/kafka-control-proxy-examples/ssl/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/kafka-control-proxy-examples/ssl/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/kafka-control-proxy-examples/transform-add-header/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/kafka-control-proxy-examples/transform-add-header/src/main/resources" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/kafka-control-proxy-performance/consumer/src/main/java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/kafka-control-proxy-performance/consumer/src/main/resources" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/kafka-control-proxy-performance/metrics/src/main/java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/kafka-control-proxy-performance/metrics/src/main/resources" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/kafka-control-proxy-performance/producer/src/main/java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/kafka-control-proxy-performance/producer/src/main/resources" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/kafka-control-proxy-performance/src-2/main/java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/kafka-control-proxy-performance/src-2/main/resources" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/kafka-control-proxy-performance/src/main/java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/kafka-control-proxy-performance/src/main/resources" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/kafka-control-proxy/src/main/generated" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/kafka-control-proxy/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/kafka-control-proxy/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/src/main/resources" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/../playground/src/main/java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/../playground/src/main/resources" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/../../playground/src/main/java" charset="UTF-8" />
-    <file url="file://$PROJECT_DIR$/../../playground/src/main/resources" charset="UTF-8" />
   </component>
 </project>

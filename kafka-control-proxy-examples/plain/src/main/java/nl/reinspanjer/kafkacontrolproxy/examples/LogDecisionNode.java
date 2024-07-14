@@ -26,6 +26,7 @@ import org.apache.kafka.common.requests.AbstractResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+// This is a simple example of a DecisionNode implementation, which logs the request data and always allows the request to proceed.
 public class LogDecisionNode implements DecisionNode {
     private static final Logger LOGGER = LoggerFactory.getLogger(LogDecisionNode.class);
     private Vertx vertx;
@@ -38,12 +39,13 @@ public class LogDecisionNode implements DecisionNode {
 
     @Override
     public Future<Boolean> request(RequestHeaderAndPayload request) {
+
         Context context = this.vertx.getOrCreateContext();
         context.put("TEST", "TEST");
         Promise<Boolean> resultPromise = Promise.promise();
 
         vertx.runOnContext(v -> {
-            LOGGER.info("Request: " + request.request.data());
+            LOGGER.info("Request: {}", request.request.data());
             resultPromise.complete(true);
         });
 
@@ -56,11 +58,11 @@ public class LogDecisionNode implements DecisionNode {
 
         vertx.runOnContext(v -> {
             Context context = this.vertx.getOrCreateContext();
-            LOGGER.info("Request: " + request.request.data());
-            resultPromise.complete(true);
-            context.get("TEST");
-        });
+            String test = context.get("TEST");
+            LOGGER.info("Context {} Request: {}", test, response.data());
+            resultPromise.complete();
 
+        });
 
         return Future.succeededFuture();
     }

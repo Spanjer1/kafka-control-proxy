@@ -6,11 +6,16 @@
         <artifactId>kafka-control-proxy-parent</artifactId>
         <version>999-SNAPSHOT</version>
     </parent>
+    <properties>
+        <maven.compiler.target>17</maven.compiler.target>
+        <maven.compiler.source>17</maven.compiler.source>
+    </properties>
+
     <artifactId>kafka-control-proxy-examples</artifactId>
     <packaging>pom</packaging>
     <name>Kafka Proxy Examples</name>
     <modules>
-        <module>clean</module>
+        <module>plain</module>
         <module>firewall</module>
         <module>transform-add-header</module>
         <module>ssl</module>

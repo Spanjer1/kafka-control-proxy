@@ -6,7 +6,7 @@
         <artifactId>kafka-control-proxy-examples</artifactId>
         <version>999-SNAPSHOT</version>
     </parent>
-    <artifactId>clean</artifactId>
+    <artifactId>plain</artifactId>
     <dependencies>
         <dependency>
             <groupId>nl.reinspanjer</groupId>
