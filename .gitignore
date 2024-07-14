@@ -99,5 +99,9 @@ buildNumber.properties
 ### environment files ###
 *.env
 
-### Python
+### Python ###
 *venv
+
+
+### drawio ###
+*.$*
