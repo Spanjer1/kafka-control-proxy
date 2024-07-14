@@ -14,7 +14,7 @@
 * under the License.
 */
 
-package nl.reinspanjer.kafkacontrolproxy.verticles;
+package nl.reinspanjer.kcp.verticles;
 
 import io.vertx.core.eventbus.DeliveryOptions;
 import io.vertx.core.Vertx;
@@ -31,8 +31,6 @@ import java.util.function.Function;
 import io.vertx.serviceproxy.ServiceException;
 import io.vertx.serviceproxy.ServiceExceptionMessageCodec;
 import io.vertx.serviceproxy.ProxyUtils;
-
-import io.vertx.core.Future;
 /*
   Generated Proxy code - DO NOT EDIT
   @author Roger the Robot

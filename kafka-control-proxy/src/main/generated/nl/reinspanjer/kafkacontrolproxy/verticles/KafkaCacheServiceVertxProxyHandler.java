@@ -14,10 +14,8 @@
 * under the License.
 */
 
-package nl.reinspanjer.kafkacontrolproxy.verticles;
+package nl.reinspanjer.kcp.verticles;
 
-import nl.reinspanjer.kafkacontrolproxy.verticles.KafkaCacheService;
-import io.vertx.core.Vertx;
 import io.vertx.core.Handler;
 import io.vertx.core.AsyncResult;
 import io.vertx.core.eventbus.EventBus;
@@ -42,10 +40,10 @@ import io.vertx.serviceproxy.HelperUtils;
 import io.vertx.serviceproxy.ServiceBinder;
 
 import io.vertx.core.Vertx;
-import nl.reinspanjer.kafkacontrolproxy.verticles.KafkaCacheService;
-import nl.reinspanjer.kafkacontrolproxy.admin.Broker;
+import nl.reinspanjer.kcp.verticles.KafkaCacheService;
+import nl.reinspanjer.kcp.admin.Broker;
 import io.vertx.core.Future;
-import nl.reinspanjer.kafkacontrolproxy.admin.Config;
+import nl.reinspanjer.kcp.admin.Config;
 /*
   Generated Proxy code - DO NOT EDIT
   @author Roger the Robot

@@ -14,10 +14,9 @@
 * under the License.
 */
 
-package nl.reinspanjer.kafkacontrolproxy.verticles;
+package nl.reinspanjer.kcp.verticles;
 
 import io.vertx.core.eventbus.DeliveryOptions;
-import io.vertx.core.Vertx;
 import io.vertx.core.Future;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.json.JsonArray;
@@ -33,10 +32,9 @@ import io.vertx.serviceproxy.ServiceExceptionMessageCodec;
 import io.vertx.serviceproxy.ProxyUtils;
 
 import io.vertx.core.Vertx;
-import nl.reinspanjer.kafkacontrolproxy.verticles.KafkaCacheService;
-import nl.reinspanjer.kafkacontrolproxy.admin.Broker;
-import io.vertx.core.Future;
-import nl.reinspanjer.kafkacontrolproxy.admin.Config;
+import nl.reinspanjer.kcp.verticles.KafkaCacheService;
+import nl.reinspanjer.kcp.admin.Broker;
+import nl.reinspanjer.kcp.admin.Config;
 /*
   Generated Proxy code - DO NOT EDIT
   @author Roger the Robot
@@ -73,7 +71,7 @@ public class KafkaCacheServiceVertxEBProxy implements KafkaCacheService {
     _deliveryOptions.addHeader("action", "getConfig");
     _deliveryOptions.getHeaders().set("action", "getConfig");
     return _vertx.eventBus().<JsonObject>request(_address, _json, _deliveryOptions).map(msg -> {
-      return msg.body() != null ? new nl.reinspanjer.kafkacontrolproxy.admin.Config((JsonObject)msg.body()) : null;
+      return msg.body() != null ? new nl.reinspanjer.kcp.admin.Config((JsonObject)msg.body()) : null;
     });
   }
   @Override
@@ -97,7 +95,7 @@ public class KafkaCacheServiceVertxEBProxy implements KafkaCacheService {
     _deliveryOptions.addHeader("action", "getBrokers");
     _deliveryOptions.getHeaders().set("action", "getBrokers");
     return _vertx.eventBus().<JsonObject>request(_address, _json, _deliveryOptions).map(msg -> {
-      return msg.body() != null ? new nl.reinspanjer.kafkacontrolproxy.admin.Broker((JsonObject)msg.body()) : null;
+      return msg.body() != null ? new nl.reinspanjer.kcp.admin.Broker((JsonObject)msg.body()) : null;
     });
   }
 }
