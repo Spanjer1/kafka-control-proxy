@@ -22,7 +22,7 @@ This is created as part of my Master Thesis at the University of Amsterdam, yet 
 ## How Kafka Control Proxy Works?
 Every KCP instance can reach every Kafka broker, for every broker a KCP instance opens a port to listen for incoming connections and forwards them to the right broker.
 The load can be equally distributed between the KCP instances by using a load balancer in front of the KCP instances, shown in below image.
-![](images/kcp.png)
+![](images/network.drawio.png)
 
 
 ## Performance
