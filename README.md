@@ -25,7 +25,9 @@ Every KCP instance can reach every Kafka broker, for every broker a KCP instance
 The load can be equally distributed between the KCP instances by using a load balancer in front of the KCP instances, shown in below image.
 ![](images/network.drawio.png)
 
-All 4 kcp instances can reach all three brokers. So even if the load balancer equally distributes the connections, which broker it will be used is part of the partitions of the topic.
+All four KCP instances can reach all three brokers. Even if the load balancer equally distributes the connections, the broker used depends on the topic partitions and event key.
+Note that four KCP instances are likely overkill, as KCP is lightweight and not the bottleneck. This just demonstrates how the connections work. KCP can scale 
+independently of the Kafka cluster.
 
 There are three different Control Nodes in KCP:
 - ObserverNode: Observes the Kafka traffic and can be used to log the traffic out of the dataflow
