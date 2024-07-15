@@ -22,17 +22,8 @@ import java.util.Optional;
 
 public interface TCPClientSettings {
 
-    @WithDefault("10")
-    int pool();
-
     @WithDefault("false")
     boolean ssl();
-
-    @WithDefault("10000")
-    int connectTimeout();
-
-    @WithDefault("10000")
-    int idleTimeout();
 
     @WithDefault("false")
     boolean trustAllCertificates();
