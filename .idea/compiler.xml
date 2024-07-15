@@ -10,14 +10,6 @@
       <directory url="file://$PROJECT_DIR$/kafka-control-proxy-performance/metrics/src/main/resources/archetype-resources" includeSubdirectories="true" />
     </excludeFromCompile>
     <annotationProcessing>
-      <profile name="Annotation profile for kafka-control-proxy-parent" enabled="true">
-        <sourceOutputDir name="src/main/generated" />
-        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
-        <outputRelativeToContentRoot value="true" />
-        <option name="outputDirectory" value="$PROJECT_DIR$/kafka-control-proxy/src/main" />
-        <processor name="io.vertx.codegen.CodeGenProcessor" />
-        <module name="kafka-control-proxy" />
-      </profile>
       <profile name="Maven default annotation processors profile" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
@@ -26,6 +18,14 @@
         <module name="ssl" />
         <module name="transform-add-header" />
         <module name="plain" />
+      </profile>
+      <profile name="Annotation profile for kafka-control-proxy-parent" enabled="true">
+        <sourceOutputDir name="src/main/generated" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <option name="outputDirectory" value="$PROJECT_DIR$/kafka-control-proxy/src/main" />
+        <processor name="io.vertx.codegen.CodeGenProcessor" />
+        <module name="kafka-control-proxy" />
       </profile>
     </annotationProcessing>
   </component>
