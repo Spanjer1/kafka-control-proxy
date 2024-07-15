@@ -131,4 +131,29 @@ The following properties are available:
 - **proxy.origin.tcp-client.truststore**: The truststore for the connection from kcp to the broker
 - **proxy.origin.tcp-client.truststore-password**: The password for the truststore
 
+## Maven
+
+To use this project in your own project, you can add the following dependency to your pom.xml with the usage of jitpack.io:
+
+```xml
+<repositories>
+    <repository>
+        <id>jitpack.io</id>
+        <url>https://jitpack.io</url>
+    </repository>
+</repositories>
+```
+```xml
+<dependencies>
+    <dependency>
+        <groupId>com.github.Spanjer1.kafka-control-proxy</groupId>
+        <artifactId>kafka-control-proxy</artifactId>
+        <version>v0.0.1</version>
+    </dependency>
+</dependencies>
+```
+
+the packages are available under the 'nl.reinspanjer.kcp.*' namespace.
+
+Publishing it to the Maven Central Repository is still in progress.
 
