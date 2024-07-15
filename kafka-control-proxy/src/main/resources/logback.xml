@@ -1,0 +1,2 @@
+<!--/* Needed for Vert.x to recognize that logback is used,  the logging is controlled via the configuration */-->
+<configuration></configuration>

@@ -1,0 +1,18 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="SSL" type="Application" factoryName="Application">
+    <option name="envFilePaths">
+      <option value="$PROJECT_DIR$/kafka-control-proxy-examples/ssl/.env" />
+    </option>
+    <option name="MAIN_CLASS_NAME" value="nl.nn.kafkacontrolproxy.examples.Main" />
+    <module name="ssl" />
+    <extension name="coverage">
+      <pattern>
+        <option name="PATTERN" value="nl.nn.kafkacontrolproxy.examples.*" />
+        <option name="ENABLED" value="true" />
+      </pattern>
+    </extension>
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>
