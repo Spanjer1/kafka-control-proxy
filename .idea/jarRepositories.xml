@@ -2,29 +2,9 @@
 <project version="4">
   <component name="RemoteRepositoriesConfiguration">
     <remote-repository>
-      <option name="id" value="public3" />
-      <option name="name" value="public3" />
-      <option name="url" value="https://artifactory.insim.biz/artifactory/nn-ibissource" />
-    </remote-repository>
-    <remote-repository>
       <option name="id" value="central" />
       <option name="name" value="Central Repository" />
       <option name="url" value="https://repo.maven.apache.org/maven2" />
-    </remote-repository>
-    <remote-repository>
-      <option name="id" value="public4" />
-      <option name="name" value="public4" />
-      <option name="url" value="https://artifactory.insim.biz/artifactory/Foundation-PublicRepos" />
-    </remote-repository>
-    <remote-repository>
-      <option name="id" value="public2" />
-      <option name="name" value="public2" />
-      <option name="url" value="https://artifactory.insim.biz/artifactory/nn-cnc-apie-artifacts" />
-    </remote-repository>
-    <remote-repository>
-      <option name="id" value="confluent" />
-      <option name="name" value="confluent" />
-      <option name="url" value="https://artifactory.insim.biz/artifactory/packages-confluent-io/maven" />
     </remote-repository>
     <remote-repository>
       <option name="id" value="central" />
@@ -35,21 +15,6 @@
       <option name="id" value="jboss.community" />
       <option name="name" value="JBoss Community repository" />
       <option name="url" value="https://repository.jboss.org/nexus/content/repositories/public/" />
-    </remote-repository>
-    <remote-repository>
-      <option name="id" value="central" />
-      <option name="name" value="Central Repository" />
-      <option name="url" value="https://artifactory.insim.biz/artifactory/Foundation-PublicRepos" />
-    </remote-repository>
-    <remote-repository>
-      <option name="id" value="forgerock-openam" />
-      <option name="name" value="forgerock-openam" />
-      <option name="url" value="https://artifactory.insim.biz/artifactory/forgerock-base/artifactory/forgerock-openam-7.3.0-dependencies" />
-    </remote-repository>
-    <remote-repository>
-      <option name="id" value="public1" />
-      <option name="name" value="public1" />
-      <option name="url" value="https://artifactory.insim.biz/artifactory/jcenter" />
     </remote-repository>
   </component>
 </project>

@@ -76,7 +76,7 @@ public class KafkaControlProxy {
      */
     private static List<Future<String>> getFutures(Vertx vertx, List<ApplicationConfig.Origin.Broker> brokers) {
         int times = 3;
-        LOGGER.info("Deploying {} server for each broker", times);
+        LOGGER.info("Deploying {} Verticles for each broker", times);
         List<Future<String>> futures = new ArrayList<>();
 
         for (int j = 0; j < times; j++) {
