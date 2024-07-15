@@ -98,6 +98,7 @@ buildNumber.properties
 
 ### environment files ###
 *.env
+!.env.example
 
 ### Python ###
 *venv
