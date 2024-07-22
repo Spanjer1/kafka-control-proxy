@@ -46,11 +46,14 @@ public class KafkaControlProxy {
 
     public static Future<String> deploy(Vertx vertx) {
         LogConfig.configure();
-
         // Register internal nodes
         NodeRegistrator.registerNode(List.of(ApiKeys.CREATE_TOPICS), new UpdateConfig().init(vertx));
-        NodeRegistrator.registerNode(List.of(ApiKeys.METADATA, ApiKeys.FIND_COORDINATOR), new TransformHosts().init(vertx));
-        NodeRegistrator.registerNode(List.of(ApiKeys.values()), new Audit().init(vertx));
+        NodeRegistrator.registerNode(List.of(ApiKeys.METADATA, ApiKeys.FIND_COORDINATOR, ApiKeys.DESCRIBE_CLUSTER), new TransformHosts().init(vertx));
+
+        if (config.ext().audit()) {
+            NodeRegistrator.registerNode(List.of(ApiKeys.values()), new Audit().init(vertx));
+        }
+
 
         List<ApplicationConfig.Origin.Broker> brokers = config.origin().brokers();
         if (brokers.isEmpty()) {
@@ -75,7 +78,7 @@ public class KafkaControlProxy {
      *   Deploy a server for every broker in the list
      */
     private static List<Future<String>> getFutures(Vertx vertx, List<ApplicationConfig.Origin.Broker> brokers) {
-        int times = 3;
+        int times = 3; // How many times the server needs to be deployed, I am not certain if this has added value
         LOGGER.info("Deploying {} Verticles for each broker", times);
         List<Future<String>> futures = new ArrayList<>();
 

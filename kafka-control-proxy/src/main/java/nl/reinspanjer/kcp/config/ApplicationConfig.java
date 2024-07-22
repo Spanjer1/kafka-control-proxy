@@ -87,6 +87,9 @@ public interface ApplicationConfig {
 
         Cache cache();
 
+        @WithDefault("false")
+        Boolean audit();
+
         @ConfigMapping(prefix = "schema-registry")
         interface SchemaRegistry {
             @WithDefault("false")
