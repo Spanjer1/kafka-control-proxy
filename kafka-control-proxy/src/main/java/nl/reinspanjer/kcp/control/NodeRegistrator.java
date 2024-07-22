@@ -30,7 +30,6 @@ public class NodeRegistrator {
     private static final Map<ApiKeys, List<DecisionNode>> decisionNodes = new HashMap<>();
     private static final Map<ApiKeys, List<ObserverNode>> observerNodes = new HashMap<>();
     private static final Map<ApiKeys, List<TransformNode>> transformNodes = new HashMap<>();
-    private static final Map<ApiKeys, List<TransformResponseNode>> transformResponseNodes = new HashMap<>();
 
     public static <T extends Node> void addToHashMap(Map<ApiKeys, List<T>> map, List<ApiKeys> apiKeys, T node) {
         for (ApiKeys apiKey : apiKeys) {
@@ -57,17 +56,12 @@ public class NodeRegistrator {
         addToHashMap(transformNodes, apiKeys, node);
     }
 
-    public static void registerNode(List<ApiKeys> apiKeys, TransformResponseNode node) {
-        addToHashMap(transformResponseNodes, apiKeys, node);
-    }
-
     public static NodeTemplate getNodes(ApiKeys apiKey) {
 
         NodeTemplate nodeTemplate = new NodeTemplate();
         nodeTemplate.setDecisionNodes(decisionNodes.get(apiKey));
         nodeTemplate.setObserverNodes(observerNodes.get(apiKey));
         nodeTemplate.setTransformNodes(transformNodes.get(apiKey));
-        nodeTemplate.setTransformResponseNodes(transformResponseNodes.get(apiKey));
         return nodeTemplate;
 
     }

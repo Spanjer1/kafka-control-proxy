@@ -20,7 +20,7 @@ import io.vertx.core.Future;
 import io.vertx.core.Vertx;
 import nl.reinspanjer.kcp.config.ApplicationConfig;
 import nl.reinspanjer.kcp.config.ProxyConfig;
-import nl.reinspanjer.kcp.control.TransformResponseNode;
+import nl.reinspanjer.kcp.control.TransformNode;
 import nl.reinspanjer.kcp.data.Address;
 import nl.reinspanjer.kcp.data.BrokerOriginMap;
 import nl.reinspanjer.kcp.request.RequestHeaderAndPayload;
@@ -30,6 +30,7 @@ import org.apache.kafka.common.Node;
 import org.apache.kafka.common.message.FindCoordinatorResponseData;
 import org.apache.kafka.common.message.MetadataResponseData;
 import org.apache.kafka.common.protocol.ApiKeys;
+import org.apache.kafka.common.protocol.Errors;
 import org.apache.kafka.common.requests.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,7 +38,7 @@ import org.slf4j.LoggerFactory;
 import java.nio.ByteBuffer;
 import java.util.List;
 
-public class TransformHosts implements TransformResponseNode {
+public class TransformHosts implements TransformNode {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(TransformHosts.class);
     private static final ApplicationConfig config = ProxyConfig.build();
@@ -48,6 +49,11 @@ public class TransformHosts implements TransformResponseNode {
     public TransformHosts init(Vertx vertx) {
         this.vertx = vertx;
         return this;
+    }
+
+    @Override
+    public Future<RequestHeaderAndPayload> request(RequestHeaderAndPayload request) {
+        return Future.succeededFuture(request);
     }
 
     @Override
@@ -96,14 +102,20 @@ public class TransformHosts implements TransformResponseNode {
         }
 
         findCoordinatorResponses.forEach(coordinator -> {
-            Address origin = new Address(coordinator.host(), coordinator.port());
-            Address newOrigin = transformAddress(origin);
-            if (newOrigin == null) {
-                LOGGER.error("Unknown coordinator node seen in {}: {}:{}", ApiKeys.FIND_COORDINATOR, coordinator.host(), coordinator.port());
+            if (coordinator.errorCode() != 0) {
+                LOGGER.error("Error in {}: {}", ApiKeys.FIND_COORDINATOR, Errors.forCode(coordinator.errorCode()));
+            } else {
+                Address origin = new Address(coordinator.host(), coordinator.port());
+                Address newOrigin = transformAddress(origin);
+                if (newOrigin == null) {
+                    LOGGER.error("Unknown coordinator node seen in {}: {}:{}", ApiKeys.FIND_COORDINATOR, coordinator.host(), coordinator.port());
+                }
+                LOGGER.info("Transforming coordinator " + origin + " to " + newOrigin);
+                coordinator.setHost(newOrigin.getHost());
+                coordinator.setPort(newOrigin.getPort());
             }
-            LOGGER.info("Transforming coordinator " + origin + " to " + newOrigin);
-            coordinator.setHost(newOrigin.getHost());
-            coordinator.setPort(newOrigin.getPort());
+
+
         });
 
         if (LOGGER.isTraceEnabled()) {
@@ -118,7 +130,7 @@ public class TransformHosts implements TransformResponseNode {
             Address newOrigin = transformAddress(origin);
             broker.setHost(newOrigin.getHost());
             broker.setPort(newOrigin.getPort());
-            LOGGER.info("Transforming cluster broker " + broker.brokerId() + origin + " to " + newOrigin);
+            LOGGER.info("Transforming cluster broker " + broker.brokerId() + " " + origin + " to " + newOrigin);
         });
     }
 

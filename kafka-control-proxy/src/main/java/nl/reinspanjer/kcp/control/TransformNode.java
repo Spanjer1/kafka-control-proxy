@@ -18,12 +18,11 @@ package nl.reinspanjer.kcp.control;
 
 import io.vertx.core.Future;
 import nl.reinspanjer.kcp.request.RequestHeaderAndPayload;
-import org.apache.kafka.common.requests.AbstractResponse;
+import nl.reinspanjer.kcp.response.ResponseHeaderAndPayload;
 
 public interface TransformNode extends Node {
 
     Future<RequestHeaderAndPayload> request(RequestHeaderAndPayload request);
-
-    Future<Void> response(RequestHeaderAndPayload request, AbstractResponse response);
+    Future<ResponseHeaderAndPayload> response(RequestHeaderAndPayload request, ResponseHeaderAndPayload response);
 
 }

@@ -22,11 +22,11 @@ import io.vertx.core.Vertx;
 import nl.reinspanjer.kcp.control.TransformNode;
 import nl.reinspanjer.kcp.request.MutableProduceRequest;
 import nl.reinspanjer.kcp.request.RequestHeaderAndPayload;
+import nl.reinspanjer.kcp.response.ResponseHeaderAndPayload;
 import nl.reinspanjer.kcp.utils.BufferUtil;
 import org.apache.kafka.common.header.Header;
 import org.apache.kafka.common.header.internals.RecordHeader;
 import org.apache.kafka.common.protocol.ApiKeys;
-import org.apache.kafka.common.requests.AbstractResponse;
 import org.apache.kafka.common.requests.ProduceRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -86,10 +86,8 @@ public class HeaderTransformHead implements TransformNode {
     }
 
     @Override
-    public Future<Void> response(RequestHeaderAndPayload request, AbstractResponse response) {
-        Promise<Void> promise = Promise.promise();
-        promise.complete();
-        return promise.future();
+    public Future<ResponseHeaderAndPayload> response(RequestHeaderAndPayload request, ResponseHeaderAndPayload response) {
+        return Future.succeededFuture(response);
     }
 
 }

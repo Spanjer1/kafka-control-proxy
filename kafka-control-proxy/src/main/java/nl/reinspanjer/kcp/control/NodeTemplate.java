@@ -34,7 +34,6 @@ public class NodeTemplate {
     private List<DecisionNode> decisionNodes = new ArrayList<>();
     private List<ObserverNode> observerNodes = new ArrayList<>();
     private List<TransformNode> transformNodes = new ArrayList<>();
-    private List<TransformResponseNode> transformResponsNodes = new ArrayList<>();
 
     public int size() {
         return decisionNodes.size() + observerNodes.size() + transformNodes.size();
@@ -63,15 +62,6 @@ public class NodeTemplate {
         this.transformNodes = transformNodes;
         return this;
     }
-
-    public NodeTemplate setTransformResponseNodes(List<TransformResponseNode> transformResponseNodes) {
-        if (transformResponseNodes == null) {
-            return this;
-        }
-        this.transformResponsNodes = transformResponseNodes;
-        return this;
-    }
-
 
     public Future<NodeOutcome> processRequest(RequestHeaderAndPayload request) {
         Promise<NodeOutcome> outcome = Promise.promise();
@@ -139,17 +129,13 @@ public class NodeTemplate {
             futures.add(observerNode.response(request, r.response));
         }
 
-        for (TransformNode transformNode : transformNodes) {
-            futures.add(transformNode.response(request, r.response));
-        }
-
         for (DecisionNode decisionNode : decisionNodes) {
             futures.add(decisionNode.response(request, r.response));
         }
 
         Future<ResponseHeaderAndPayload> t = Future.succeededFuture(r);
-        for (TransformResponseNode transformResponseNode : transformResponsNodes) {
-            t.onSuccess(res -> transformResponseNode.response(request, res));
+        for (TransformNode transformNode : transformNodes) {
+            t.onSuccess(res -> transformNode.response(request, res));
         }
 
         return t;
