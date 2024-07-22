@@ -50,10 +50,9 @@ public class NetClientPool {
         this.targetPort = targetPort;
 
         options = new NetClientOptions()
-//            .setTcpNoDelay(true)
-//            .setTcpFastOpen(true)
-//            .setTcpQuickAck(true)
-//            .setLogActivity(true)
+                .setTcpNoDelay(true)
+                .setTcpFastOpen(true)
+                .setTcpQuickAck(true)
                 .setReconnectAttempts(3)
                 .setConnectTimeout(5000);
 
