@@ -18,6 +18,5 @@
         <module>plain</module>
         <module>firewall</module>
         <module>transform-add-header</module>
-        <module>ssl</module>
     </modules>
 </project>
