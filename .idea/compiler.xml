@@ -15,7 +15,6 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="firewall" />
-        <module name="ssl" />
         <module name="transform-add-header" />
         <module name="plain" />
       </profile>
@@ -28,6 +27,10 @@
         <module name="kafka-control-proxy" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="clean" target="1.8" />
+      <module name="ssl" target="17" />
+    </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">

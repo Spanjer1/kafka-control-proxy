@@ -65,7 +65,6 @@ public class MutableProduceRequest {
 
         ByteUtils.writeVarlong(timestampDelta, buffer);
         ByteUtils.writeVarint(offsetDelta, buffer);
-        LOGGER.info("Writing offsetDelta " + offsetDelta);
 
         if (key == null) {
             ByteUtils.writeVarint(-1, buffer);
@@ -82,9 +81,6 @@ public class MutableProduceRequest {
             ByteUtils.writeVarint(valueSize, buffer);
             buffer.put(value.array(), value.arrayOffset() + value.position(), valueSize);
         }
-
-        if (headers == null)
-            throw new IllegalArgumentException("Headers cannot be null");
 
         ByteUtils.writeVarint(headers.length, buffer);
 
@@ -199,7 +195,10 @@ public class MutableProduceRequest {
     }
 
     public MemoryRecords readFrom(MemoryRecords records) {
-        LogUtils.hexDump("memoryRecords", records.buffer());
+        if (LOGGER.isTraceEnabled()) {
+            LogUtils.hexDump("memoryRecords", records.buffer());
+        }
+
         Iterable<MutableRecordBatch> m = records.batches();
         MutableRecordBatch mrb = m.iterator().next(); //assuming its all the same
         DefaultRecordBatch drb = (DefaultRecordBatch) mrb;
@@ -225,21 +224,24 @@ public class MutableProduceRequest {
                 DefaultRecord defaultRecord = (DefaultRecord) record;
 
                 int delta = (int) (defaultRecord.offset() - baseOffset);
-                LOGGER.info("delta " + delta + " offset " + defaultRecord.offset() + " baseOffset " + baseOffset);
+                LOGGER.trace("delta " + delta + " offset " + defaultRecord.offset() + " baseOffset " + baseOffset);
                 long timeStampDelta = defaultRecord.timestamp() - basetimestamp;
                 ProduceParts part = this.produceParts.get(record);
                 ByteBuffer buffer = MutableProduceRequest.writeTo(delta, timeStampDelta, part.getKey(), part.getValue(), part.getArrayHeaders());
                 DefaultRecord newRecord = DefaultRecord.readFrom(buffer, baseOffset, basetimestamp, record.sequence(), null);
 
                 builder.append(newRecord);
-                LOGGER.info("Newrecord Offset " + newRecord.offset());
+                LOGGER.trace("Newrecord Offset " + newRecord.offset());
             });
 
         });
 
         MemoryRecords newRecords = builder.build();
 
-        LogUtils.hexDump("newRecords", newRecords.buffer());
+        if (LOGGER.isTraceEnabled()) {
+            LogUtils.hexDump("newRecords", newRecords.buffer());
+        }
+
         return newRecords;
     }
 
