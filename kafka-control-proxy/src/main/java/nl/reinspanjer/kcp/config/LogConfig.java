@@ -31,10 +31,23 @@ import java.util.Map;
 public class LogConfig {
 
     private final static String DEFAULT_LOG_FORMAT = "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n";
+    private static LogConfigInterface logConfig;
+
+    public void build() {
+
+    }
+
+    // This is used to set the config in the different tests, this always overwrites the config in static context
+    public static void build(SmallRyeConfig config) {
+        LogConfig.logConfig = config.getConfigMapping(LogConfigInterface.class);
+    }
 
     public static boolean configure() {
-        SmallRyeConfig config = new SmallRyeConfigBuilder().addDefaultSources().withMapping(LogConfigInterface.class).build();
-        LogConfigInterface logConfig = config.getConfigMapping(LogConfigInterface.class);
+        if (logConfig == null) {
+            SmallRyeConfig config = new SmallRyeConfigBuilder().addDefaultSources().withMapping(LogConfigInterface.class).build();
+            logConfig = config.getConfigMapping(LogConfigInterface.class);
+
+        }
         Map<String, LogConfigInterface.Level> logMap = logConfig.logs();
 
         String loglevel = logMap.getOrDefault("root", LogConfigInterface.Level.INFO).toString();
