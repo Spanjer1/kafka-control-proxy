@@ -47,13 +47,7 @@ public class KafkaControlProxy {
     public static Future<String> deploy(Vertx vertx) {
         LogConfig.configure();
         // Register internal nodes
-        NodeRegistrator.registerNode(List.of(ApiKeys.CREATE_TOPICS), new UpdateConfig().init(vertx));
-        NodeRegistrator.registerNode(List.of(ApiKeys.METADATA, ApiKeys.FIND_COORDINATOR, ApiKeys.DESCRIBE_CLUSTER), new TransformHosts().init(vertx));
-
-        if (config.ext().audit()) {
-            NodeRegistrator.registerNode(List.of(ApiKeys.values()), new Audit().init(vertx));
-        }
-
+        registerNodes(vertx);
 
         List<ApplicationConfig.Origin.Broker> brokers = config.origin().brokers();
         if (brokers.isEmpty()) {
@@ -93,12 +87,21 @@ public class KafkaControlProxy {
                 LOGGER.info("Server " + serverAddress + " -> Broker " + broker);
                 originConfig.put(broker, serverAddress);
                 Server server = new Server(proxyPort);
+
                 vertx.deployVerticle(server);
                 futures.add(server.listening());
             }
         }
 
         return futures;
+    }
+
+    public static void registerNodes(Vertx vertx) {
+        NodeRegistrator.registerNode(List.of(ApiKeys.CREATE_TOPICS), new UpdateConfig().init(vertx));
+        NodeRegistrator.registerNode(List.of(ApiKeys.METADATA, ApiKeys.FIND_COORDINATOR, ApiKeys.DESCRIBE_CLUSTER), new TransformHosts().init(vertx));
+        if (config.ext().audit()) {
+            NodeRegistrator.registerNode(List.of(ApiKeys.values()), new Audit().init(vertx));
+        }
     }
 
 }

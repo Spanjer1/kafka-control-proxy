@@ -148,7 +148,6 @@ public class MutableProduceRequest {
 
         this.oData.topicData().forEach(
                 topicData -> {
-                    LOGGER.info("topic " + topicData.name());
                     topicData.partitionData().forEach(
                             partitionData -> {
                                 MemoryRecords records = (MemoryRecords) partitionData.records();

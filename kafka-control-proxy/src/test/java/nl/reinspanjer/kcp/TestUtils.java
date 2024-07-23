@@ -11,9 +11,6 @@ import io.vertx.core.net.NetSocket;
 import io.vertx.junit5.VertxTestContext;
 import nl.reinspanjer.kcp.config.ApplicationConfig;
 import nl.reinspanjer.kcp.config.LogConfigInterface;
-import org.apache.kafka.clients.consumer.ConsumerRecord;
-import org.apache.kafka.clients.consumer.ConsumerRecords;
-import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.common.protocol.ByteBufferAccessor;
 import org.apache.kafka.common.protocol.MessageSizeAccumulator;
 import org.apache.kafka.common.protocol.ObjectSerializationCache;
@@ -30,10 +27,6 @@ import java.net.Socket;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.security.KeyStore;
-import java.time.Duration;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -43,10 +36,10 @@ public class TestUtils {
     public static SmallRyeConfig loadConfigWithOverwrite(Map<String, String> m) throws IOException {
 
         SmallRyeConfig config = new SmallRyeConfigBuilder()
-            .addDefaultSources()
-            .withSources(new PropertiesConfigSource(m, "overwrite_values", 100000))
-            .withMapping(ApplicationConfig.class).withMapping(LogConfigInterface.class)
-            .build();
+                .addDefaultSources()
+                .withSources(new PropertiesConfigSource(m, "overwrite_values", 100000))
+                .withMapping(ApplicationConfig.class).withMapping(LogConfigInterface.class)
+                .build();
 
         return config;
     }
@@ -66,10 +59,10 @@ public class TestUtils {
         return buffer;
     }
 
-    public static SSLContext createSSLContext(String fl, String password){
-        try{
+    public static SSLContext createSSLContext(String fl, String password) {
+        try {
             KeyStore keyStore = KeyStore.getInstance("JKS");
-            keyStore.load(new FileInputStream(fl),password.toCharArray());
+            keyStore.load(new FileInputStream(fl), password.toCharArray());
 
             // Create key manager
             KeyManagerFactory keyManagerFactory = KeyManagerFactory.getInstance("SunX509");
@@ -83,9 +76,9 @@ public class TestUtils {
 
             // Initialize SSLContext
             SSLContext sslContext = SSLContext.getInstance("TLSv1.2");
-            sslContext.init(km,  tm, null);
+            sslContext.init(km, tm, null);
             return sslContext;
-        } catch (Exception ex){
+        } catch (Exception ex) {
             ex.printStackTrace();
             return null;
         }
@@ -95,22 +88,22 @@ public class TestUtils {
         VertxTestContext testContext = new VertxTestContext();
         Promise<AbstractResponse> ab = Promise.promise();
         try {
-           Future<NetSocket> socketFut = brokerClient.connect(port, host);
-           socketFut.onSuccess(
-                socket -> {
+            Future<NetSocket> socketFut = brokerClient.connect(port, host);
+            socketFut.onSuccess(
+                    socket -> {
 
-                    socket.write(Buffer.buffer(buffer.array()));
-                    socket.handler(buffer1 -> {
-                        ByteBuffer responseSize = ByteBuffer.wrap(buffer1.getBytes(0, 4));
-                        int size = responseSize.order(ByteOrder.BIG_ENDIAN).getInt();
-                        ByteBuffer response = ByteBuffer.wrap(buffer1.getBytes(4, size + 4));
-                        ab.complete(AbstractResponse.parseResponse(response, header));
-                        testContext.completeNow();
-                    });
-                }
+                        socket.write(Buffer.buffer(buffer.array()));
+                        socket.handler(buffer1 -> {
+                            ByteBuffer responseSize = ByteBuffer.wrap(buffer1.getBytes(0, 4));
+                            int size = responseSize.order(ByteOrder.BIG_ENDIAN).getInt();
+                            ByteBuffer response = ByteBuffer.wrap(buffer1.getBytes(4, size + 4));
+                            ab.complete(AbstractResponse.parseResponse(response, header));
+                            testContext.completeNow();
+                        });
+                    }
             ).onFailure(
-                testContext::failNow
-           );
+                    testContext::failNow
+            );
         } catch (Exception e) {
             e.printStackTrace();
             return null;
@@ -155,34 +148,6 @@ public class TestUtils {
             e.printStackTrace();
             return null;
         }
-
-    }
-
-    public static Integer getSizeOfConsumerRecord(ConsumerRecords<String, String> records, String topic) {
-       Iterator<ConsumerRecord<String,String>> it = records.records(topic).iterator();
-       int length = 0;
-       while (it.hasNext()) {
-           it.next();
-           length += 1;
-       }
-       return length;
-    }
-
-
-    public static List<ConsumerRecords<String, String>> pollTillResult(KafkaConsumer<String, String> consumer, Duration pollingTime, int times, int expected, String topic) {
-        List<ConsumerRecords<String, String>> recordsList = new ArrayList<>();
-        int received = 0;
-        for (int i = 0; i < times; i++) {
-            var records = consumer.poll(pollingTime);
-            if (!records.isEmpty()) {
-                recordsList.add(records);
-                received += getSizeOfConsumerRecord(records, topic);
-            }
-            if (received >= expected) {
-                return recordsList;
-            }
-        }
-        return null;
 
     }
 }

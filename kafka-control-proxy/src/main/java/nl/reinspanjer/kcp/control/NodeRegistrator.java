@@ -20,10 +20,7 @@ import org.apache.kafka.common.protocol.ApiKeys;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class NodeRegistrator {
     private static final Logger LOGGER = LoggerFactory.getLogger(NodeRegistrator.class);
@@ -41,6 +38,22 @@ public class NodeRegistrator {
                 reqList.add(node);
                 map.put(apiKey, reqList);
             }
+        }
+    }
+
+    public static void clearNodes(){
+        decisionNodes.clear();
+        observerNodes.clear();
+        transformNodes.clear();
+    }
+
+    public static void removeNode(Node node){
+        if(node instanceof DecisionNode){
+            decisionNodes.values().forEach(list -> list.remove(node));
+        } else if(node instanceof ObserverNode){
+            observerNodes.values().forEach(list -> list.remove(node));
+        } else if(node instanceof TransformNode){
+            transformNodes.values().forEach(list -> list.remove(node));
         }
     }
 

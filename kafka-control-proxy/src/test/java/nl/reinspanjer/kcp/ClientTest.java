@@ -1,10 +1,6 @@
 package nl.reinspanjer.kcp;
 
-import io.smallrye.config.SmallRyeConfig;
 import io.vertx.core.Vertx;
-import io.vertx.junit5.VertxTestContext;
-import nl.reinspanjer.kcp.config.LogConfig;
-import nl.reinspanjer.kcp.config.ProxyConfig;
 import nl.reinspanjer.kcp.data.Address;
 import org.apache.kafka.clients.admin.*;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
@@ -28,93 +24,39 @@ import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testcontainers.containers.DockerComposeContainer;
-import org.testcontainers.containers.wait.strategy.Wait;
 
-import java.io.File;
 import java.nio.ByteBuffer;
 import java.time.Duration;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class ClientTest {
+    static final Vertx vertx = Vertx.vertx();
+    private static final KafkaUtils utils = KafkaUtils.getInstance();
+    private static final Logger LOGGER = LoggerFactory.getLogger(ClientTest.class);
+    @ClassRule
+    public static DockerComposeContainer environment = utils.register();
     static Integer KAFKA_PROXY_PORT = 8888;
     static String KAFKA_PROXY_HOST = "localhost";
     static List<Address> addresses = List.of(new Address("localhost", 8888), new Address("localhost", 8889), new Address("localhost", 8890));
-    static Vertx vertx = Vertx.vertx();
-    static AdminClient adminClient;
-    static KafkaProducer<String, String> producer;
-    static KafkaConsumer<String, String> consumer;
-    static Properties producerProps = new Properties();
-    static Properties consumerProps = new Properties();
-
-    private static Logger LOGGER = LoggerFactory.getLogger(ClientTest.class);
-
-    @ClassRule
-    public static DockerComposeContainer environment =
-            new DockerComposeContainer(new File("src/test/resources/docker-compose.yml"))
-                    .withExposedService("broker-1", 9092, Wait.forListeningPort())
-                    .withExposedService("broker-2", 9092, Wait.forListeningPort())
-                    .withExposedService("broker-3", 9092, Wait.forListeningPort());
-
 
     @AfterAll
     static void stop() {
-        environment.stop();
+        utils.unregister();
     }
 
     @BeforeAll
     static void prepare() throws Throwable {
-        environment.start();
-
-        VertxTestContext testContext = new VertxTestContext();
-        Map<String, String> overwrite = Map.of(
-                "proxy.server.host", "localhost",
-                "proxy.server.port", "" + KAFKA_PROXY_PORT,
-                "proxy.origin.brokers[0].host", "localhost",
-                "proxy.origin.brokers[0].port", "9092",
-                "proxy.origin.brokers[1].host", "localhost",
-                "proxy.origin.brokers[1].port", "9093",
-                "proxy.origin.brokers[2].host", "localhost",
-                "proxy.origin.brokers[2].port", "9094",
-                "proxy.log.\"nl.reinspanjer\"", "INFO"
-        );
-        SmallRyeConfig config = TestUtils.loadConfigWithOverwrite(overwrite);
-        ProxyConfig.build(config);
-        LogConfig.build(config);
-        KafkaControlProxy.deploy(vertx).onComplete(testContext.succeedingThenComplete());
-        assertThat(testContext.awaitCompletion(5, TimeUnit.SECONDS)).isTrue();
-        if (testContext.failed()) {
-            throw testContext.causeOfFailure();
-        }
-
-        Properties props = new Properties();
-        props.put(AdminClientConfig.BOOTSTRAP_SERVERS_CONFIG, KAFKA_PROXY_HOST + ":" + KAFKA_PROXY_PORT + "," +
-                KAFKA_PROXY_HOST + ":" + (KAFKA_PROXY_PORT + 1) + "," +
-                KAFKA_PROXY_HOST + ":" + (KAFKA_PROXY_PORT + 2));
-
-        adminClient = AdminClient.create(props);
-        producerProps = (Properties) props.clone();
-        producerProps.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer");
-        producerProps.put("value.serializer", "org.apache.kafka.common.serialization.StringSerializer");
-
-        producer = new KafkaProducer<>(producerProps);
-
-        consumerProps = (Properties) props.clone();
-        consumerProps.put("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
-        consumerProps.put("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
-        consumerProps.put("group.id", "test-group");
-
-        consumer = new KafkaConsumer<>(consumerProps);
+        KCPUtils.start(KAFKA_PROXY_PORT, vertx);
     }
 
     @Test
     public void testDescribeClusterResult() throws ExecutionException, InterruptedException {
 
-        DescribeClusterResult result = adminClient.describeCluster();
+        DescribeClusterResult result = utils.getAdminClient().describeCluster();
 
         String clusterId = result.clusterId().get();
         assertThat(clusterId).isNotNull();
@@ -135,20 +77,21 @@ public class ClientTest {
     @Test
     public void testCreateAndDeleteTopics() throws ExecutionException, InterruptedException {
         String topic = "test-topic";
-        CreateTopicsResult result = adminClient.createTopics(List.of(new NewTopic(topic, 1, (short) 1)));
+
+        CreateTopicsResult result = utils.getAdminClient().createTopics(List.of(new NewTopic(topic, 1, (short) 1)));
         assertThat(result.numPartitions(topic).get()).isEqualTo(1);
         assertThat(result.topicId(topic).get()).isNotNull();
         assertThat(result.replicationFactor(topic).get()).isEqualTo((short) 1);
         assertThat(result.values().size()).isEqualTo(1);
 
-        DeleteTopicsResult deleteTopicsResult = adminClient.deleteTopics(List.of(topic));
+        DeleteTopicsResult deleteTopicsResult = utils.getAdminClient().deleteTopics(List.of(topic));
         assertThat(deleteTopicsResult.topicNameValues().size()).isEqualTo(1);
 
         //sleep to allow the topic to be deleted
         Thread.sleep(1000);
 
         //Try to find if it is gone
-        DescribeTopicsResult describeTopicsResult = adminClient.describeTopics(List.of(topic));
+        DescribeTopicsResult describeTopicsResult = utils.getAdminClient().describeTopics(List.of(topic));
 
         try {
             describeTopicsResult.topicNameValues().get(topic).get();
@@ -163,7 +106,7 @@ public class ClientTest {
     public void consumeProduce() throws ExecutionException, InterruptedException {
         String topic = "consumeProduce";
         try {
-            adminClient.createTopics(List.of(new NewTopic(topic, 1, (short) 1))).all().get();
+            utils.getAdminClient().createTopics(List.of(new NewTopic(topic, 1, (short) 1))).all().get();
         } catch (ExecutionException e) {
             if (e.getCause() instanceof org.apache.kafka.common.errors.TopicExistsException) {
                 LOGGER.info("Topic already exists");
@@ -171,23 +114,23 @@ public class ClientTest {
                 throw e;
             }
         }
-
-        RecordMetadata data = producer.send(new org.apache.kafka.clients.producer.ProducerRecord<>(topic, "test", "test")).get();
+        RecordMetadata data = utils.send(topic, "test", "test");
         assertThat(data.hasOffset()).isTrue();
 
-        consumer.assign(List.of(new org.apache.kafka.common.TopicPartition(topic, data.partition())));
-        consumer.seek(new org.apache.kafka.common.TopicPartition(topic, data.partition()), data.offset());
-        ConsumerRecords<String, String> records = consumer.poll(Duration.ofMillis(1000));
-        assertThat(records.count()).isEqualTo(1);
 
-        adminClient.deleteTopics(List.of(topic)).all().get();
+        utils.getConsumer().assign(List.of(new org.apache.kafka.common.TopicPartition(topic, data.partition())));
+        utils.getConsumer().seek(new org.apache.kafka.common.TopicPartition(topic, data.partition()), data.offset());
+        ConsumerRecords<String, String> records = utils.getConsumer().poll(Duration.ofMillis(1000));
+        assertThat(records.count()).isEqualTo(1);
+        utils.deleteTopic(topic);
     }
 
     @Test
     public void multipleConsumerAndProducers() throws InterruptedException, ExecutionException {
         String topic = "multipleConsumerAndProducers";
         try {
-            adminClient.createTopics(List.of(new NewTopic(topic, 1, (short) 1))).all().get();
+            utils.createTopic(topic, 1, (short) 1);
+
         } catch (ExecutionException e) {
             if (e.getCause() instanceof org.apache.kafka.common.errors.TopicExistsException) {
                 LOGGER.info("Topic already exists");
@@ -197,15 +140,15 @@ public class ClientTest {
         }
 
         Thread.sleep(3000);
-        List<KafkaProducer<String,String>> producers = new ArrayList<>();
-        List<KafkaConsumer<String,String>> consumers = new ArrayList<>();
+        List<KafkaProducer<String, String>> producers = new ArrayList<>();
+        List<KafkaConsumer<String, String>> consumers = new ArrayList<>();
         for (int i = 0; i < 3; i++) {
-            Properties pp = (Properties) producerProps.clone();
+            Properties pp = (Properties) KafkaUtils.producerProps.clone();
             pp.put("client.id", "producer-" + i);
             KafkaProducer<String, String> producer = new KafkaProducer<>(pp);
             producers.add(producer);
 
-            Properties cp = (Properties) consumerProps.clone();
+            Properties cp = (Properties) KafkaUtils.consumerProps.clone();
             cp.put(ConsumerConfig.CLIENT_ID_CONFIG, "consumer-" + i);
             cp.put(ConsumerConfig.GROUP_ID_CONFIG, "test-group-" + i);
             cp.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
@@ -219,7 +162,7 @@ public class ClientTest {
                     producer.send(new org.apache.kafka.clients.producer.ProducerRecord<>(topic, "test", "test")));
         }
 
-        List<RecordMetadata>  metadata = futures.stream().map(f -> {
+        List<RecordMetadata> metadata = futures.stream().map(f -> {
             try {
                 return f.get();
             } catch (InterruptedException | ExecutionException e) {
@@ -236,7 +179,7 @@ public class ClientTest {
             consumer.subscribe(List.of(topic));
         }
 
-       // sleep for some time
+        // sleep for some time
         for (KafkaConsumer<String, String> consumer : consumers) {
             ConsumerRecords<String, String> records = consumer.poll(Duration.ofMillis(10000));
             for (int i = 0; i < 10; i++) {
@@ -292,7 +235,7 @@ public class ClientTest {
         short _version = 2;
         String topicName = "testMetaDataTransformation";
         try {
-            adminClient.createTopics(List.of(new NewTopic(topicName, 3, (short) 1))).all().get();
+            utils.getAdminClient().createTopics(List.of(new NewTopic(topicName, 3, (short) 1))).all().get();
         } catch (ExecutionException e) {
             if (e.getCause() instanceof org.apache.kafka.common.errors.TopicExistsException) {
                 LOGGER.info("Topic already exists");
@@ -329,7 +272,6 @@ public class ClientTest {
         assertThat(metadataResponseData.brokers().size()).isEqualTo(3);
 
     }
-
 
 
 }
