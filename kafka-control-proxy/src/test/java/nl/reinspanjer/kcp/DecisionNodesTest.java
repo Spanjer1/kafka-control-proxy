@@ -19,7 +19,7 @@ import java.util.function.Function;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class DecisionNodesTests {
+public class DecisionNodesTest {
     private static final DecisionTestNode decisionTestNode = new DecisionTestNode();
     static Integer KAFKA_PROXY_PORT = 8888;
     static Vertx vertx = Vertx.vertx();
