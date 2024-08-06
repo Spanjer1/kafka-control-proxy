@@ -16,15 +16,20 @@
 
 package nl.reinspanjer.kcp.data;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.HashMap;
 import java.util.Map;
 
 public class BrokerOriginMap {
+    private static final Logger LOGGER = LoggerFactory.getLogger(BrokerOriginMap.class);
     private static BrokerOriginMap config;
-    private Map<Address, Address> brokerToServer = new HashMap<>();
-    private Map<Address, Address> serverToBroker = new HashMap<>();
+    private final Map<Address, Address> brokerToServer = new HashMap<>();
+    private final Map<Address, Address> serverToBroker = new HashMap<>();
 
     public static BrokerOriginMap build() {
+        LOGGER.debug("Building BrokerOriginMap");
         if (config == null) {
             config = new BrokerOriginMap();
         }
@@ -42,10 +47,19 @@ public class BrokerOriginMap {
     }
 
     public Address getServerFromBroker(Address broker) {
+
         if (config == null) {
+            LOGGER.error("BrokerOriginMap not initialized");
             return null;
         }
-        return config.brokerToServer.get(broker);
+
+        Address addr = config.brokerToServer.get(broker);
+        if (addr == null) {
+            LOGGER.error("Broker {} not found in BrokerOriginMap", broker);
+            LOGGER.debug("BrokerOriginMap: {}", config.brokerToServer);
+        }
+
+        return addr;
     }
 
     public Address getBrokerFromServer(Address server) {
