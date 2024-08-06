@@ -16,6 +16,7 @@
         <outputRelativeToContentRoot value="true" />
         <module name="firewall" />
         <module name="transform-add-header" />
+        <module name="field-encryption" />
         <module name="plain" />
       </profile>
       <profile name="Annotation profile for kafka-control-proxy-parent" enabled="true">

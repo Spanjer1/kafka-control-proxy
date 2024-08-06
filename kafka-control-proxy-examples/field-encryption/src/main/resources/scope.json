@@ -1,0 +1,30 @@
+{
+  "users": [
+    {
+      "username": "user1",
+      "scope": [
+        "bank"
+      ]
+    },
+    {
+      "username": "user3",
+      "scope": [
+        "insurance"
+      ]
+    },
+    {
+      "username": "ops",
+      "scope": [
+        "operation"
+      ]
+    }
+  ],
+  "scopePaths": {
+    "bank": [
+      "$.bank.*"
+    ],
+    "insurance": [
+      "$.insurance.*"
+    ]
+  }
+}

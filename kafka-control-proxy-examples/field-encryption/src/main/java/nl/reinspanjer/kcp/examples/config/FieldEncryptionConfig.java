@@ -16,15 +16,30 @@
 
 package nl.reinspanjer.kcp.examples.config;
 
-import io.smallrye.config.ConfigMapping;
+import io.smallrye.config.SmallRyeConfig;
+import io.smallrye.config.SmallRyeConfigBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.util.List;
+public class FieldEncryptionConfig {
+    private static final Logger LOGGER = LoggerFactory.getLogger(FieldEncryptionConfig.class);
 
-@ConfigMapping(prefix = "firewall")
-public interface FireWallRules {
-    List<String> admin();
+    private static FieldEncryptionConfig config;
 
-    List<String> producer();
+    public static FieldEncryptionConfig build() {
+        if (FieldEncryptionConfig.config != null) {
+            return config;
+        }
 
-    List<String> consumer();
+        SmallRyeConfig smallRyeConfig = new SmallRyeConfigBuilder().addDefaultSources()
+                .withMapping(FieldEncryptionConfigInterface.class)
+                .build();
+
+        LOGGER.info(smallRyeConfig.getConfigSources().toString());
+
+        return config;
+
+
+    }
+
 }

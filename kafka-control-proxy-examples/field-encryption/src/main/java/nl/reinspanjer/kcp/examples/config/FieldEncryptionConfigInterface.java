@@ -19,12 +19,24 @@ package nl.reinspanjer.kcp.examples.config;
 import io.smallrye.config.ConfigMapping;
 
 import java.util.List;
+import java.util.Map;
 
-@ConfigMapping(prefix = "firewall")
-public interface FireWallRules {
-    List<String> admin();
+@ConfigMapping(prefix = "crypto")
+interface FieldEncryptionConfigInterface {
 
-    List<String> producer();
+    Map<String, Mapping> scope();
 
-    List<String> consumer();
+    Map<String, List<Users>> group();
+
+    interface Mapping {
+        List<String> groups();
+
+        List<String> paths();
+    }
+
+    interface Users {
+        List<String> users();
+    }
+
+
 }

@@ -23,7 +23,7 @@ import org.testcontainers.containers.DockerComposeContainer;
 
 import java.nio.ByteBuffer;
 import java.time.Duration;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.function.BiFunction;
 import java.util.function.Function;
@@ -72,6 +72,7 @@ public class TransformNodesTest {
             return Future.succeededFuture(r);
         };
         transformTestNode.setRequestHandler(f);
+        transformTestNode.setResponseHandler((req, res) -> Future.succeededFuture(res));
 
         utils.createTopic(topic, 1, (short) 1);
         utils.send(topic, "key", "value");
@@ -81,6 +82,53 @@ public class TransformNodesTest {
         assertThat(records).isNotNull();
         assertThat(records.get(0).count()).isEqualTo(1);
         assertThat(records.get(0).iterator().next().value()).isEqualTo("transformed"); // expecting to be transformed
+    }
+
+    @Test
+    public void testTransformKey() throws ExecutionException, InterruptedException {
+        String topic = "testTransformKey";
+
+        Function<RequestHeaderAndPayload, Future<RequestHeaderAndPayload>> f = (r) -> {
+            if (r.request.apiKey() == ApiKeys.FETCH) {
+                return Future.succeededFuture(r); //don't transform fetch requests
+            }
+            MutableProduceRequest newRequest = new MutableProduceRequest((ProduceRequest) r.request);
+            newRequest.transform((produceParts -> {
+                if (produceParts == null) {
+                    throw new RuntimeException("No parts found for record");
+                }
+                produceParts.setKey(ByteBuffer.wrap("same".getBytes())); // transform any message with key.
+                return produceParts;
+            }));
+
+            r.request = newRequest.toProduceRequest();
+            return Future.succeededFuture(r);
+        };
+
+        transformTestNode.setRequestHandler(f);
+        transformTestNode.setResponseHandler((req, res) -> Future.succeededFuture(res));
+
+        utils.createTopic(topic, 3, (short) 1);
+        for (int i = 0; i < 100; i++) {
+            utils.send(topic, UUID.randomUUID().toString(), "value");
+        }
+
+        List<ConsumerRecords<String, String>> records = utils.receive(topic, Duration.ofMillis(1000), 10, 100);
+        assertThat(records).isNotNull();
+
+        List<ConsumerRecord<String, String>> flatRecords = utils.flattenRecords(records);
+        assertThat(flatRecords.size()).isEqualTo(100);
+
+        assertThat(flatRecords.stream().allMatch((r) -> "same".equals(r.key()))).isTrue(); // expecting to be transformed
+
+        Map<Integer, Integer> countPartition = new HashMap<>();
+
+        for (ConsumerRecord<String, String> next : flatRecords) {
+            int n = countPartition.getOrDefault(next.partition(), 1);
+            countPartition.put(next.partition(), n);
+        }
+
+        assertThat(countPartition.size()).isEqualTo(1);
     }
 
     @Test
@@ -112,6 +160,7 @@ public class TransformNodesTest {
         assertThat(records).isNotNull();
         assertThat(records.get(0).count()).isEqualTo(1);
         assertThat(records.get(0).iterator().next().value()).isEqualTo("transformed1"); // expecting to be transformed
+
 
     }
 

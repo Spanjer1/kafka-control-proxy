@@ -43,6 +43,7 @@ public class FireWallConfig {
 
     public Set<ApiKeys> consumer = Set.of(
             ApiKeys.API_VERSIONS,
+            ApiKeys.LIST_OFFSETS,
             ApiKeys.SASL_HANDSHAKE,
             ApiKeys.SASL_AUTHENTICATE,
             ApiKeys.CONSUMER_GROUP_DESCRIBE,
@@ -50,6 +51,7 @@ public class FireWallConfig {
             ApiKeys.JOIN_GROUP,
             ApiKeys.LEAVE_GROUP,
             ApiKeys.SYNC_GROUP,
+            ApiKeys.METADATA,
             ApiKeys.FETCH
     );
 
@@ -62,13 +64,26 @@ public class FireWallConfig {
             return config;
         }
 
-        SmallRyeConfig smallRyeConfig = new SmallRyeConfigBuilder().addDefaultSources()
+        SmallRyeConfig smallRyeConfig = new SmallRyeConfigBuilder()
+                .addDefaultSources()
                 .withMapping(FireWallRules.class)
                 .build();
 
-        LOGGER.info(smallRyeConfig.getConfigSources().toString());
-
         FireWallRules fireWallRules = smallRyeConfig.getConfigMapping(FireWallRules.class);
+
+        FireWallConfig proxyConfig = getFireWallConfig(fireWallRules);
+        return proxyConfig;
+
+    }
+
+    // This is used to set the config in the different tests, this always overwrites the config in static context
+    public static FireWallConfig build(SmallRyeConfig config) {
+        FireWallRules appConfig = config.getConfigMapping(FireWallRules.class);
+
+        return getFireWallConfig(appConfig);
+    }
+
+    private static FireWallConfig getFireWallConfig(FireWallRules fireWallRules) {
         LOGGER.info(fireWallRules.producer().toString());
 
         FireWallConfig proxyConfig = new FireWallConfig();
@@ -87,7 +102,6 @@ public class FireWallConfig {
 
         FireWallConfig.config = proxyConfig;
         return proxyConfig;
-
     }
 
     private static void addRules(ApiKeys key, FireWallConfig proxyConfig, List<String> fireWallRules) {

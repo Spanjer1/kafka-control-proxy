@@ -133,7 +133,6 @@ public class TestUtils {
             //get size of the message
             int size = ByteBuffer.wrap(responseSize).order(ByteOrder.BIG_ENDIAN).getInt();
 
-
             byte[] response = new byte[size];
             int bytesRead = in.read(response);
             assert bytesRead == size;
