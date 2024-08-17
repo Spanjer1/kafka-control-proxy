@@ -5,11 +5,9 @@ import nl.reinspanjer.kcp.request.ProduceParts;
 import nl.reinspanjer.kcp.utils.BufferUtil;
 import nl.reinspanjer.kcp.utils.LogUtils;
 import org.apache.kafka.common.message.FetchResponseData;
-import org.apache.kafka.common.message.ProduceRequestData;
-import org.apache.kafka.common.record.*;
 import org.apache.kafka.common.record.Record;
+import org.apache.kafka.common.record.*;
 import org.apache.kafka.common.requests.FetchResponse;
-import org.apache.kafka.common.requests.ProduceRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

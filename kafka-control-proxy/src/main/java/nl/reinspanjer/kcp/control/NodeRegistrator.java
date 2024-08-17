@@ -20,7 +20,10 @@ import org.apache.kafka.common.protocol.ApiKeys;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class NodeRegistrator {
     private static final Logger LOGGER = LoggerFactory.getLogger(NodeRegistrator.class);
