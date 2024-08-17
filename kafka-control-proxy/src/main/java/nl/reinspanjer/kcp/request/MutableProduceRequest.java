@@ -146,14 +146,19 @@ public class MutableProduceRequest {
         this.size = oBuffer.remaining();
         this.oData = producerequest.data();
 
+
         this.oData.topicData().forEach(
                 topicData -> {
+
                     topicData.partitionData().forEach(
                             partitionData -> {
                                 MemoryRecords records = (MemoryRecords) partitionData.records();
+
                                 Iterable<MutableRecordBatch> m = records.batches();
+
                                 m.forEach(
-                                        batch -> batch.iterator().forEachRemaining(
+                                        batch ->
+                                                batch.iterator().forEachRemaining(
                                                 record -> {
                                                     DefaultRecord defaultRecord = (DefaultRecord) record;
                                                     ProduceParts parts = new ProduceParts();
@@ -162,8 +167,11 @@ public class MutableProduceRequest {
                                                     parts
                                                             .setKey(copyKey)
                                                             .setValue(copyValue)
-                                                            .setHeaders(defaultRecord.headers());
+                                                            .setHeaders(defaultRecord.headers())
+                                                            .setTopicName(topicData.name());
+
                                                     produceParts.put(defaultRecord, parts);
+
                                                 }
                                         )
                                 );

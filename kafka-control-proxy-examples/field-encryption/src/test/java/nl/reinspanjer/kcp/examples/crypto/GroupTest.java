@@ -13,29 +13,35 @@
  * See the License for the specific language governing permissions and limitations under the License.
  ******************************************************************************/
 
-package nl.reinspanjer.kcp.examples;
+package nl.reinspanjer.kcp.examples.crypto;
 
-import io.vertx.core.Vertx;
-import nl.reinspanjer.kcp.KafkaControlProxy;
-import org.apache.kafka.common.protocol.ApiKeys;
-import org.slf4j.Logger;
+import nl.reinspanjer.kcp.examples.config.FieldEncryptionConfigInterface;
 
 import java.util.List;
 
-import static nl.reinspanjer.kcp.control.NodeRegistrator.registerNode;
+public class GroupTest implements FieldEncryptionConfigInterface.Group {
+    String groupId;
+    List<String> user;
+    List<String> scope;
 
-public class Main {
-
-    private Logger LOGGER = org.slf4j.LoggerFactory.getLogger(Main.class);
-
-    public static void main(String[] args) {
-        Vertx vertx = Vertx.vertx();
-        registerNode(
-                List.of(ApiKeys.values()),  // set the firewall for all apikeys
-                new FireWallNode().init(vertx) // initialize it with the vertx instance
-        );
-
-        KafkaControlProxy.deploy(vertx);
+    public GroupTest(String groupId, List<String> user, List<String> scope) {
+        this.groupId = groupId;
+        this.user = user;
+        this.scope = scope;
     }
 
+    @Override
+    public String groupId() {
+        return groupId;
+    }
+
+    @Override
+    public List<String> user() {
+        return user;
+    }
+
+    @Override
+    public List<String> scope() {
+        return scope;
+    }
 }

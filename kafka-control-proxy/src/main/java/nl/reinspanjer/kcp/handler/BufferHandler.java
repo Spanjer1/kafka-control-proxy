@@ -47,10 +47,10 @@ public class BufferHandler implements Handler<Buffer> {
     private final BufferCollector brokerBufferCollector = new BufferCollector();
     private final BufferCollector clientBufferCollector = new BufferCollector();
     private final Vertx vertx;
-    private SocketPair socketPair;
-    private Map<Integer, RequestHeaderAndPayload> fetchHeaderCache = new HashMap<>();
+    private final SocketPair socketPair;
+    private final Map<Integer, RequestHeaderAndPayload> fetchHeaderCache = new HashMap<>();
 
-    private String USERNAME_CONTEXT = "USERNAME";
+    private final String USERNAME_CONTEXT = "USERNAME";
 
     public BufferHandler(Vertx vertx, SocketPair pair) {
         this.vertx = vertx;

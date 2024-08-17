@@ -21,6 +21,7 @@
     <modules>
         <module>kafka-control-proxy</module>
         <module>kafka-control-proxy-examples</module>
+        <module>kafka-control-proxy-examples/schema-validation</module>
     </modules>
     <dependencyManagement>
         <dependencies>

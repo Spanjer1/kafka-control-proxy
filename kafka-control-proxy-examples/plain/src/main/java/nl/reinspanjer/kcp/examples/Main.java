@@ -30,7 +30,7 @@ public class Main {
         Vertx vertx = Vertx.vertx();
         registerNode(
                 List.of(ApiKeys.values()), //register for all Kafka API keys
-                new LogDecisionNode().init(vertx) // LogDecisionNode is a simple DecisionNode implementation
+                new LogObserverNode().init(vertx) // LogDecisionNode is a simple DecisionNode implementation
         );
         KafkaControlProxy.deploy(vertx);
     }

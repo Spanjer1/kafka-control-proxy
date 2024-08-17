@@ -138,7 +138,7 @@ public class KafkaUtils {
         return consumer;
     }
 
-    public List<ConsumerRecord<String, String>> flattenRecords(List<ConsumerRecords<String,String>> recordsList) {
+    public List<ConsumerRecord<String, String>> flattenRecords(List<ConsumerRecords<String, String>> recordsList) {
         List<ConsumerRecord<String, String>> flatList = new ArrayList<>();
         for (ConsumerRecords<String, String> records : recordsList) {
             for (ConsumerRecord<String, String> record : records) {

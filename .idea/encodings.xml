@@ -7,6 +7,8 @@
     <file url="file://$PROJECT_DIR$/kafka-control-proxy-examples/firewall/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/kafka-control-proxy-examples/plain/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/kafka-control-proxy-examples/plain/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/kafka-control-proxy-examples/schema-validation/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/kafka-control-proxy-examples/schema-validation/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/kafka-control-proxy-examples/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/kafka-control-proxy-examples/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/kafka-control-proxy-examples/ssl/src/main/java" charset="UTF-8" />

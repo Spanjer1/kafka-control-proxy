@@ -13,29 +13,27 @@
  * See the License for the specific language governing permissions and limitations under the License.
  ******************************************************************************/
 
-package nl.reinspanjer.kcp.examples;
+package nl.reinspanjer.kcp.examples.crypto;
 
-import io.vertx.core.Vertx;
-import nl.reinspanjer.kcp.KafkaControlProxy;
-import org.apache.kafka.common.protocol.ApiKeys;
-import org.slf4j.Logger;
+import nl.reinspanjer.kcp.examples.config.FieldEncryptionConfigInterface;
 
-import java.util.List;
+public class RuleTest implements FieldEncryptionConfigInterface.Rule {
+    private final String path;
 
-import static nl.reinspanjer.kcp.control.NodeRegistrator.registerNode;
+    private final String scope;
 
-public class Main {
-
-    private Logger LOGGER = org.slf4j.LoggerFactory.getLogger(Main.class);
-
-    public static void main(String[] args) {
-        Vertx vertx = Vertx.vertx();
-        registerNode(
-                List.of(ApiKeys.values()),  // set the firewall for all apikeys
-                new FireWallNode().init(vertx) // initialize it with the vertx instance
-        );
-
-        KafkaControlProxy.deploy(vertx);
+    RuleTest(String path, String scope) {
+        this.path = path;
+        this.scope = scope;
     }
 
+    @Override
+    public String path() {
+        return path;
+    }
+
+    @Override
+    public String scope() {
+        return scope;
+    }
 }

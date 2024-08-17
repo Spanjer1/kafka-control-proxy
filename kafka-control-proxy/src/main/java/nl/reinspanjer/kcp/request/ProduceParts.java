@@ -26,6 +26,7 @@ import java.util.List;
 public class ProduceParts {
 
     private List<Header> headers;
+    private String topicName;
     private ByteBuffer key;
     private ByteBuffer value;
 
@@ -46,6 +47,7 @@ public class ProduceParts {
         this.headers.addAll(Arrays.asList(headers));
         return this;
     }
+
 
     public Header[] getArrayHeaders() {
         return headers.toArray(new Header[0]);
@@ -69,4 +71,12 @@ public class ProduceParts {
         return this;
     }
 
+    public ProduceParts setTopicName(String topicName) {
+        this.topicName = topicName;
+        return this;
+    }
+
+    public String getTopicName() {
+        return topicName;
+    }
 }

@@ -14,6 +14,7 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <module name="schema-validation" />
         <module name="firewall" />
         <module name="transform-add-header" />
         <module name="field-encryption" />

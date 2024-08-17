@@ -20,33 +20,33 @@ import io.vertx.core.Context;
 import io.vertx.core.Future;
 import io.vertx.core.Promise;
 import io.vertx.core.Vertx;
-import nl.reinspanjer.kcp.control.DecisionNode;
+import nl.reinspanjer.kcp.control.ObserverNode;
 import nl.reinspanjer.kcp.request.RequestHeaderAndPayload;
 import org.apache.kafka.common.requests.AbstractResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 // This is a simple example of a DecisionNode implementation, which logs the request data and always allows the request to proceed.
-public class LogDecisionNode implements DecisionNode {
-    private static final Logger LOGGER = LoggerFactory.getLogger(LogDecisionNode.class);
+public class LogObserverNode implements ObserverNode {
+    private static final Logger LOGGER = LoggerFactory.getLogger(LogObserverNode.class);
     private Vertx vertx;
 
     @Override
-    public LogDecisionNode init(Vertx vertx) {
+    public LogObserverNode init(Vertx vertx) {
         this.vertx = vertx;
         return this;
     }
 
     @Override
-    public Future<Boolean> request(RequestHeaderAndPayload request) {
+    public Future<Void> request(RequestHeaderAndPayload request) {
 
         Context context = this.vertx.getOrCreateContext();
         context.put("TEST", "TEST");
-        Promise<Boolean> resultPromise = Promise.promise();
+        Promise<Void> resultPromise = Promise.promise();
 
         vertx.runOnContext(v -> {
             LOGGER.info("Request: {}", request.request.data());
-            resultPromise.complete(true);
+            resultPromise.complete();
         });
 
         return resultPromise.future();

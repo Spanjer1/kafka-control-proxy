@@ -19,15 +19,12 @@ package nl.reinspanjer.kcp.examples;
 import io.vertx.core.Vertx;
 import nl.reinspanjer.kcp.KafkaControlProxy;
 import org.apache.kafka.common.protocol.ApiKeys;
-import org.slf4j.Logger;
 
 import java.util.List;
 
 import static nl.reinspanjer.kcp.control.NodeRegistrator.registerNode;
 
 public class Main {
-
-    private Logger LOGGER = org.slf4j.LoggerFactory.getLogger(Main.class);
 
     public static void main(String[] args) {
         Vertx vertx = Vertx.vertx();
@@ -37,6 +34,4 @@ public class Main {
         );
         KafkaControlProxy.deploy(vertx);
     }
-
-
 }

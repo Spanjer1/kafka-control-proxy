@@ -19,5 +19,6 @@
         <module>firewall</module>
         <module>transform-add-header</module>
         <module>field-encryption</module>
+        <module>schema-validation</module>
     </modules>
 </project>
